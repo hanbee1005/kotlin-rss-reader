@@ -1,5 +1,7 @@
 package rssmission.controller
 
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import rssmission.model.Post
 import rssmission.service.NaverPostService
 import rssmission.service.WoowahanPostService
@@ -11,14 +13,16 @@ class RssController(
     val naverPostService: NaverPostService,
     val rssView: RssView,
 ) {
-    fun getPosts(keyword: String): List<Post> {
-        val woowahanPostList = woowahanPostService.getPosts(keyword)
-        val naverPostList = naverPostService.getPosts(keyword)
-        val totalList = woowahanPostList + naverPostList
-        return totalList
-            .sortedByDescending { it.date }
-            .take(min(10, totalList.size))
-    }
+    suspend fun getPosts(keyword: String): List<Post> =
+        coroutineScope {
+            val woowahanPostList = async { woowahanPostService.getPosts(keyword) }
+            val naverPostList = async { naverPostService.getPosts(keyword) }
+            val totalList = woowahanPostList.await() + naverPostList.await()
+
+            totalList
+                .sortedByDescending { it.date }
+                .take(min(10, totalList.size))
+        }
 
     fun printInputMessage() {
         rssView.printInputMessage()

@@ -8,7 +8,7 @@ import java.util.*
 import javax.xml.parsers.DocumentBuilderFactory
 
 class WoowahanPostService {
-    fun getPosts(keyword: String): List<Post> {
+    suspend fun getPosts(keyword: String): List<Post> {
         val factory = DocumentBuilderFactory.newInstance()
         val xml =
             factory.newDocumentBuilder()
