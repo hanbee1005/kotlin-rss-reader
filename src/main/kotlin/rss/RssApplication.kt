@@ -1,12 +1,13 @@
 package rss
 
 import rss.controller.RssController
+import rss.service.NaverPostService
 import rss.service.WoowahanPostService
 import rss.view.RssView
 
 fun main() {
     // 1. 컨트롤러, 뷰 생성
-    val controller = RssController(WoowahanPostService())
+    val controller = RssController(WoowahanPostService(), NaverPostService())
     val view = RssView()
 
     // 2. 입력 받을 문구 출력
