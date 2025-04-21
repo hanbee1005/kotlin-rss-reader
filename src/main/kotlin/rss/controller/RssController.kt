@@ -1,19 +1,21 @@
 package rss.controller
 
+import kotlinx.coroutines.coroutineScope
 import rss.model.Post
 import rss.service.NaverPostService
 import rss.service.WoowahanPostService
 import kotlin.math.min
 
 class RssController(
-    val woowahanPostService: WoowahanPostService,
-    val naverPostService: NaverPostService,
+    private val woowahanPostService: WoowahanPostService,
+    private val naverPostService: NaverPostService,
 ) {
-    fun getPosts(keyword: String): List<Post> {
-        val woowahanPosts = woowahanPostService.getPosts(keyword)
-        val naverPostService = naverPostService.getPosts(keyword)
+    suspend fun getPosts(keyword: String): List<Post> =
+        coroutineScope {
+            val woowahanPosts = woowahanPostService.getPosts(keyword)
+            val naverPostService = naverPostService.getPosts(keyword)
 
-        val totalPosts = (woowahanPosts + naverPostService).sortedByDescending { it.pubDate }
-        return totalPosts.take(min(10, totalPosts.size))
-    }
+            val totalPosts = (woowahanPosts + naverPostService).sortedByDescending { it.pubDate }
+            totalPosts.take(min(10, totalPosts.size))
+        }
 }
