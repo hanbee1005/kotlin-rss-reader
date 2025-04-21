@@ -14,7 +14,7 @@ fun main() {
     val keyword = view.getReadLine()
 
     // 3. RSS 데이터 가져오기
-    val posts = controller.getPosts()
+    val posts = controller.getPosts(keyword)
 
     // 4. RSS 데이터 출력
     view.printPosts(posts)
