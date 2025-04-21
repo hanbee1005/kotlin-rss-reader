@@ -13,7 +13,7 @@ class NaverPostService {
         const val NAVER_COMPANY_NAME: String = "naver"
     }
 
-    fun getPosts(keyword: String): List<Post> {
+    suspend fun getPosts(keyword: String): List<Post> {
         val items = getItems()
 
         val postList: MutableList<Post> = mutableListOf()

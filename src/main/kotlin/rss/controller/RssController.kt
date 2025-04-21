@@ -1,5 +1,6 @@
 package rss.controller
 
+import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import rss.model.Post
 import rss.service.NaverPostService
@@ -12,10 +13,10 @@ class RssController(
 ) {
     suspend fun getPosts(keyword: String): List<Post> =
         coroutineScope {
-            val woowahanPosts = woowahanPostService.getPosts(keyword)
-            val naverPostService = naverPostService.getPosts(keyword)
+            val woowahanPosts = async { woowahanPostService.getPosts(keyword) }
+            val naverPostService = async { naverPostService.getPosts(keyword) }
 
-            val totalPosts = (woowahanPosts + naverPostService).sortedByDescending { it.pubDate }
+            val totalPosts = (woowahanPosts.await() + naverPostService.await()).sortedByDescending { it.pubDate }
             totalPosts.take(min(10, totalPosts.size))
         }
 }

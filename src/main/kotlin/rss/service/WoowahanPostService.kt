@@ -14,7 +14,7 @@ class WoowahanPostService {
         const val WOOWAHAN_COMPANY_NAME: String = "woowahan"
     }
 
-    fun getPosts(keyword: String): List<Post> {
+    suspend fun getPosts(keyword: String): List<Post> {
         val items = getItems()
 
         val postList: MutableList<Post> = mutableListOf()
