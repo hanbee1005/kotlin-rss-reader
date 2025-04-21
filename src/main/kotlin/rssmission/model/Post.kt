@@ -4,4 +4,5 @@ data class Post(
     val title: String = "",
     val link: String = "",
     val date: String = "",
+    val company: String = "",
 )

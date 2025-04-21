@@ -9,7 +9,11 @@ class RssView {
 
     fun printPostList(postList: List<Post>) {
         postList.forEachIndexed { index, post ->
-            println("[${index + 1}] ${post.title} (${post.date}) - ${post.link}")
+            println("[${index + 1}] ${post.title} (${post.date}) - ${post.link} - ${post.company}")
         }
+    }
+
+    fun readInputContent(): String {
+        return readLine() ?: ""
     }
 }

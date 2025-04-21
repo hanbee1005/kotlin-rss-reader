@@ -4,33 +4,31 @@ import org.w3c.dom.Element
 import rssmission.model.Post
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
 import javax.xml.parsers.DocumentBuilderFactory
 
-class WoowahanPostService {
+class NaverPostService {
     fun getPosts(keyword: String): List<Post> {
         val factory = DocumentBuilderFactory.newInstance()
         val xml =
             factory.newDocumentBuilder()
-                .parse("https://techblog.woowahan.com/feed")
-        val channel = xml.getElementsByTagName("channel").item(0) as Element
+                .parse("https://d2.naver.com/d2.atom")
+        val feed = xml.getElementsByTagName("feed").item(0) as Element
 
-        val items = channel.getElementsByTagName("item")
+        val entry = feed.getElementsByTagName("entry")
 
         val postList: MutableList<Post> = mutableListOf()
 
-        for (i in 0 until items.length) {
-            val item = items.item(i) as Element
+        for (i in 0 until entry.length) {
+            val item = entry.item(i) as Element
             val title = item.getElementsByTagName("title").item(0).textContent
-            val link = item.getElementsByTagName("link").item(0).textContent
+            val link = (item.getElementsByTagName("link").item(0) as Element).getAttribute("href")
 
-            val pubDateString = item.getElementsByTagName("pubDate").item(0).textContent
-            val inputFormatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss Z", Locale.ENGLISH)
+            val pubDateString = item.getElementsByTagName("updated").item(0).textContent
+            val parsedDate = ZonedDateTime.parse(pubDateString)
             val outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-            val parsedDate = ZonedDateTime.parse(pubDateString, inputFormatter)
             val pubDate = parsedDate.format(outputFormatter)
 
-            postList.add(Post(title, link, pubDate, "woowahan"))
+            postList.add(Post(title, link, pubDate, "naver"))
         }
 
         val filteredList = postList.filter { it.title.contains(keyword) }
