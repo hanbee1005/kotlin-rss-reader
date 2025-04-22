@@ -4,7 +4,7 @@ import org.w3c.dom.Element
 import rssmission.model.Post
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
+import java.util.Locale
 import javax.xml.parsers.DocumentBuilderFactory
 
 class WoowahanPostService {
