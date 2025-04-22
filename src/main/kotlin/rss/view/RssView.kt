@@ -17,4 +17,10 @@ class RssView {
         }
         println()
     }
+
+    fun printNewPosts(posts: List<Post>) {
+        println("새로운 글이 등록되었습니다!")
+        posts.forEach { println("[NEW] ${it.getInfo()}") }
+        println()
+    }
 }

@@ -17,4 +17,11 @@ class RssController(
 
             woowahanPosts.await() + naverPostService.await()
         }
+
+    fun comparePosts(
+        originPosts: List<Post>,
+        newPosts: List<Post>,
+    ): List<Post> {
+        return newPosts.filter { !originPosts.contains(it) }
+    }
 }
