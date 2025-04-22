@@ -13,16 +13,27 @@ class RssController(
     val naverPostService: NaverPostService,
     val rssView: RssView,
 ) {
-    suspend fun getPosts(keyword: String): List<Post> =
+    var originalPosts = listOf<Post>()
+
+    suspend fun getPosts(): List<Post> =
         coroutineScope {
-            val woowahanPostList = async { woowahanPostService.getPosts(keyword) }
-            val naverPostList = async { naverPostService.getPosts(keyword) }
+            val woowahanPostList = async { woowahanPostService.getPosts() }
+            val naverPostList = async { naverPostService.getPosts() }
             val totalList = woowahanPostList.await() + naverPostList.await()
 
+            originalPosts = totalList
             totalList
-                .sortedByDescending { it.date }
-                .take(min(10, totalList.size))
         }
+
+    suspend fun getFilteredPosts(keyword: String): List<Post> {
+        val filteredByKeyWord =
+            getPosts()
+                .filter { it.title.contains(keyword) }
+
+        return filteredByKeyWord
+            .sortedByDescending { it.date }
+            .take(min(10, filteredByKeyWord.size))
+    }
 
     fun printInputMessage() {
         rssView.printInputMessage()

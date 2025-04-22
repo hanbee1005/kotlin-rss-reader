@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter
 import javax.xml.parsers.DocumentBuilderFactory
 
 class NaverPostService {
-    fun getPosts(keyword: String): List<Post> {
+    fun getPosts(): List<Post> {
         val factory = DocumentBuilderFactory.newInstance()
         val xml =
             factory.newDocumentBuilder()
@@ -31,7 +31,6 @@ class NaverPostService {
             postList.add(Post(title, link, pubDate, "naver"))
         }
 
-        val filteredList = postList.filter { it.title.contains(keyword) }
-        return filteredList
+        return postList
     }
 }

@@ -8,7 +8,7 @@ import java.util.*
 import javax.xml.parsers.DocumentBuilderFactory
 
 class WoowahanPostService {
-    suspend fun getPosts(keyword: String): List<Post> {
+    suspend fun getPosts(): List<Post> {
         val factory = DocumentBuilderFactory.newInstance()
         val xml =
             factory.newDocumentBuilder()
@@ -33,7 +33,6 @@ class WoowahanPostService {
             postList.add(Post(title, link, pubDate, "woowahan"))
         }
 
-        val filteredList = postList.filter { it.title.contains(keyword) }
-        return filteredList
+        return postList
     }
 }
