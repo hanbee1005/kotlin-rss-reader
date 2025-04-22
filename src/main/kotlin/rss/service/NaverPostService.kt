@@ -13,7 +13,7 @@ class NaverPostService {
         const val NAVER_COMPANY_NAME: String = "naver"
     }
 
-    suspend fun getPosts(keyword: String): List<Post> {
+    suspend fun getPosts(): List<Post> {
         val items = getItems()
 
         val postList: MutableList<Post> = mutableListOf()
@@ -31,7 +31,7 @@ class NaverPostService {
             postList.add(Post(title, link, pubDate, NAVER_COMPANY_NAME))
         }
 
-        return postList.filter { it.title.contains(keyword) }
+        return postList
     }
 
     private fun getItems(): NodeList {

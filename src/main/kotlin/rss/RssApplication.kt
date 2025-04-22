@@ -1,11 +1,14 @@
 package rss
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import rss.controller.RssController
 import rss.service.NaverPostService
 import rss.service.WoowahanPostService
 import rss.view.RssView
-import kotlin.system.measureTimeMillis
+import kotlin.math.min
 
 fun main() {
     runBlocking {
@@ -13,20 +16,23 @@ fun main() {
         val controller = RssController(WoowahanPostService(), NaverPostService())
         val view = RssView()
 
-        // 2. 입력 받을 문구 출력
-        view.printInputMessage()
-        val keyword = view.getReadLine()
+        launch(Dispatchers.IO) {
+            while (isActive) {
+                // 2. 입력 받을 문구 출력
+                view.printInputMessage()
+                val keyword = view.getReadLine()
 
-        val totalTime =
-            measureTimeMillis {
                 // 3. RSS 데이터 가져오기
-                val posts = controller.getPosts(keyword)
+                val posts = controller.getPosts()
 
-                // 4. RSS 데이터 출력
-                view.printPosts(posts)
+                // 4. 필터링 및 정렬 후 최대 10개만 뽑기
+                val filteredPosts =
+                    posts.filter { it.title.contains(keyword) }
+                        .sortedByDescending { it.pubDate }
+
+                // 5. RSS 데이터 출력
+                view.printPosts(filteredPosts.take(min(10, filteredPosts.size)))
             }
-
-        // 5. 시간 비교
-        println("Took $totalTime ms")
+        }
     }
 }

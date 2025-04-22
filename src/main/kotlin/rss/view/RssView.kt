@@ -15,5 +15,6 @@ class RssView {
         posts.forEachIndexed { index, it ->
             println("[$index] ${it.getInfo()}")
         }
+        println()
     }
 }

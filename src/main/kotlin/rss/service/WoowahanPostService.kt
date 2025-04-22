@@ -14,7 +14,7 @@ class WoowahanPostService {
         const val WOOWAHAN_COMPANY_NAME: String = "woowahan"
     }
 
-    suspend fun getPosts(keyword: String): List<Post> {
+    suspend fun getPosts(): List<Post> {
         val items = getItems()
 
         val postList: MutableList<Post> = mutableListOf()
@@ -33,7 +33,7 @@ class WoowahanPostService {
             postList.add(Post(title, link, pubDate, WOOWAHAN_COMPANY_NAME))
         }
 
-        return postList.filter { it.title.contains(keyword) }
+        return postList
     }
 
     private fun getItems(): NodeList {
