@@ -1,6 +1,7 @@
 package rssmission
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -28,8 +29,15 @@ fun main() {
 //    }
 
     runBlocking {
-        val controller = RssController(WoowahanPostService(), NaverPostService(), RssView())
+        val controller = RssController(listOf(WoowahanPostService(), NaverPostService()), RssView())
 
+        getRssByKeyword(controller)
+        getUpdatedRss(controller)
+    }
+}
+
+private suspend fun getRssByKeyword(controller: RssController) {
+    coroutineScope {
         launch(Dispatchers.IO) {
             while (isActive) {
                 controller.printInputMessage()
@@ -38,12 +46,18 @@ fun main() {
                 controller.printPosts(postList)
             }
         }
+    }
+}
 
+private suspend fun getUpdatedRss(controller: RssController) {
+    coroutineScope {
         launch {
             while (isActive) {
                 delay(Duration.ofMinutes(10).toMillis())
+
                 val currentPosts = controller.getPosts(true)
                 val newPosts = controller.hasOtherPosts(currentPosts)
+
                 if (newPosts.isNotEmpty()) {
                     controller.printNewPosts(newPosts)
                 }

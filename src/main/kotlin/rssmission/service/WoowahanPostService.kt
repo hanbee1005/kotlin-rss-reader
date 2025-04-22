@@ -7,8 +7,8 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 import javax.xml.parsers.DocumentBuilderFactory
 
-class WoowahanPostService {
-    suspend fun getPosts(): List<Post> {
+class WoowahanPostService : PostService {
+    override suspend fun getPosts(): List<Post> {
         val factory = DocumentBuilderFactory.newInstance()
         val xml =
             factory.newDocumentBuilder()

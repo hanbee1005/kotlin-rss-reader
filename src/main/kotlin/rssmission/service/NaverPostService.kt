@@ -6,8 +6,8 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import javax.xml.parsers.DocumentBuilderFactory
 
-class NaverPostService {
-    fun getPosts(): List<Post> {
+class NaverPostService : PostService {
+    override suspend fun getPosts(): List<Post> {
         val factory = DocumentBuilderFactory.newInstance()
         val xml =
             factory.newDocumentBuilder()
