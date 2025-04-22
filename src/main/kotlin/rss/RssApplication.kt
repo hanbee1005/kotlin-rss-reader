@@ -15,8 +15,9 @@ import kotlin.math.min
 
 fun main() {
     runBlocking {
-        // 1. 컨트롤러, 뷰 생성
-        val controller = RssController(WoowahanPostService(), NaverPostService())
+        // 1. 컨트롤러, 서비스, 뷰 생성
+        val services = listOf(WoowahanPostService(), NaverPostService())
+        val controller = RssController(services)
         val view = RssView()
 
         var originPosts: List<Post> = emptyList()

@@ -1,21 +1,20 @@
 package rss.controller
 
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import rss.model.Post
-import rss.service.NaverPostService
-import rss.service.WoowahanPostService
+import rss.service.PostService
 
 class RssController(
-    private val woowahanPostService: WoowahanPostService,
-    private val naverPostService: NaverPostService,
+    private val postServices: List<PostService>,
 ) {
     suspend fun getPosts(): List<Post> =
         coroutineScope {
-            val woowahanPosts = async { woowahanPostService.getPosts() }
-            val naverPostService = async { naverPostService.getPosts() }
-
-            woowahanPosts.await() + naverPostService.await()
+            postServices
+                .map { async { it.getPosts() } }
+                .awaitAll()
+                .flatten()
         }
 
     fun comparePosts(

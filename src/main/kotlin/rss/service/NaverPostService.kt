@@ -7,13 +7,13 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import javax.xml.parsers.DocumentBuilderFactory
 
-class NaverPostService {
+class NaverPostService : PostService {
     companion object {
         const val NAVER_RSS_URL: String = "https://d2.naver.com/d2.atom"
         const val NAVER_COMPANY_NAME: String = "naver"
     }
 
-    suspend fun getPosts(): List<Post> {
+    override suspend fun getPosts(): List<Post> {
         val items = getItems()
 
         val postList: MutableList<Post> = mutableListOf()

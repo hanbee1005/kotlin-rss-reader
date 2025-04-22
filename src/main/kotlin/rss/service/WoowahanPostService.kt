@@ -8,13 +8,13 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 import javax.xml.parsers.DocumentBuilderFactory
 
-class WoowahanPostService {
+class WoowahanPostService : PostService {
     companion object {
         const val WOOWAHAN_RSS_URL: String = "https://techblog.woowahan.com/feed"
         const val WOOWAHAN_COMPANY_NAME: String = "woowahan"
     }
 
-    suspend fun getPosts(): List<Post> {
+    override suspend fun getPosts(): List<Post> {
         val items = getItems()
 
         val postList: MutableList<Post> = mutableListOf()
