@@ -13,14 +13,14 @@ import rss.view.RssView
 import java.time.Duration
 import kotlin.math.min
 
+var originPosts: List<Post> = emptyList()
+
 fun main() {
     runBlocking {
         // 1. 컨트롤러, 서비스, 뷰 생성
         val services = listOf(WoowahanPostService(), NaverPostService())
         val controller = RssController(services)
         val view = RssView()
-
-        var originPosts: List<Post> = emptyList()
 
         launch(Dispatchers.IO) { // 새로운 Dispatchers.IO 로 분리
             while (isActive) {
