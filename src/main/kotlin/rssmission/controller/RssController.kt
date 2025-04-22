@@ -15,13 +15,13 @@ class RssController(
 ) {
     var originalPosts = listOf<Post>()
 
-    suspend fun getPosts(): List<Post> =
+    suspend fun getPosts(checksUpdate: Boolean = false): List<Post> =
         coroutineScope {
             val woowahanPostList = async { woowahanPostService.getPosts() }
             val naverPostList = async { naverPostService.getPosts() }
             val totalList = woowahanPostList.await() + naverPostList.await()
 
-            originalPosts = totalList
+            if (!checksUpdate) originalPosts = totalList
             totalList
         }
 
@@ -43,7 +43,15 @@ class RssController(
         rssView.printPostList(postList)
     }
 
+    fun printNewPosts(postList: List<Post>) {
+        rssView.printNewPostList(postList)
+    }
+
     fun readInputContent(): String {
         return rssView.readInputContent()
+    }
+
+    suspend fun hasOtherPosts(newPosts: List<Post>): List<Post> {
+        return newPosts.filter { !originalPosts.contains(it) }
     }
 }
