@@ -22,11 +22,11 @@ fun main() {
 
         var originPosts: List<Post> = emptyList()
 
-        launch(Dispatchers.IO) {
+        launch(Dispatchers.IO) { // 새로운 Dispatchers.IO 로 분리
             while (isActive) {
                 // 2. 입력 받을 문구 출력
                 view.printInputMessage()
-                val keyword = view.getReadLine()
+                val keyword = view.getReadLine() // Blocking 코드
 
                 // 3. RSS 데이터 가져오기
                 originPosts = controller.getPosts()
